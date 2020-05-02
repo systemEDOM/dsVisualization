@@ -1,5 +1,3 @@
-var initialPositionX = 0;
-
 function LinkedList() {
     this.head = null;
     this.tail = null;
@@ -21,6 +19,24 @@ LinkedList.prototype.add = function(value) {
     this.length++;
 }
 
+LinkedList.prototype.remove = function(value) {
+    if (this.head == null && this.length == 0) {
+        alert("Linked List is empty");
+        return;
+    } else if (this.head.value === value) {
+        this.head = this.head.next;
+    } else {
+        let curr = this.head,
+            prev = null;
+        while (curr.next && value != curr.value) {
+            prev = curr;
+            curr = curr.next;
+        }
+        prev.next = curr.next;
+    }
+    this.length--;
+}
+
 LinkedList.prototype.print = function() {
     this.cleanDomLinkedList();
 
@@ -30,27 +46,25 @@ LinkedList.prototype.print = function() {
         curr = curr.next;
     }
 
-    this.addDomNode("N");
+    this.addDomNode("null");
 }
 
 LinkedList.prototype.addDomNode = function(value) {
+    const colElement = document.createElement('div');
     const nodeElement = document.createElement('div');
+
+    colElement.setAttribute('class', 'col-md-1');
+
     nodeElement.textContent = value;
-    if (value === "N")
+    if (value === "null")
         nodeElement.setAttribute('class', `null node_${value}`);
     else
         nodeElement.setAttribute('class', `node node_${value}`);
 
-    document.getElementById('linkedList').appendChild(nodeElement);
+    colElement.appendChild(nodeElement);
 
-    anime({
-        targets: `.node_${value}`,
-        translateX: initialPositionX,
-        duration: 2000,
-    });
+    document.getElementById('linkedList').appendChild(colElement);
 
-
-    initialPositionX += 40;
 }
 
 LinkedList.prototype.cleanDomLinkedList = function() {
@@ -58,5 +72,4 @@ LinkedList.prototype.cleanDomLinkedList = function() {
     while (div.firstChild) {
         div.removeChild(div.firstChild);
     }
-    initialPositionX = 0;
 }
